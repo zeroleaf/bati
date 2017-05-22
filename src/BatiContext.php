@@ -12,7 +12,7 @@ namespace Zeroleaf\Bati;
 use GuzzleHttp\Cookie\SetCookie;
 use Behat\Behat\Context\Context;
 use Zeroleaf\Bati\Assert\ResponseHeaderAssert;
-use Zeroleaf\Bati\Transform\Manager;
+use Zeroleaf\Bati\Transform\Transformer;
 use Zeroleaf\Bati\Storage\DataStorage;
 use Psr\Http\Message\ResponseInterface;
 use Zeroleaf\Bati\Assert\ResponseDataAssert;
@@ -44,7 +44,7 @@ class BatiContext implements Context
     protected $jsonResponseData = [];
 
     /**
-     * @var Manager
+     * @var Transformer
      */
     protected $transformer;
 
@@ -57,11 +57,11 @@ class BatiContext implements Context
      */
     public function __construct()
     {
-        $this->transformer = new Manager();
+        $this->transformer = new Transformer();
     }
 
     /**
-     * @return Manager
+     * @return Transformer
      */
     public function getTransformer()
     {

@@ -11,13 +11,15 @@ namespace Zeroleaf\Bati\Transform;
 
 use Faker\Factory;
 use Faker\Generator;
+use Zeroleaf\Bati\Config\Repository;
+use Zeroleaf\Bati\Config\Yaml;
 
 /**
  * Class Manager
  *
  * @package Zeroleaf\Bati\Transform
  */
-class Manager
+class Transformer
 {
     /**
      * @var Generator
@@ -25,13 +27,38 @@ class Manager
     protected $faker;
 
     /**
-     * Manager constructor.
-     *
-     * @param string $locale
+     * @var Repository
      */
-    public function __construct($locale = 'zh_CN')
+    protected $config;
+
+    /**
+     * Transformer constructor.
+     *
+     * @param Repository $config
+     */
+    public function __construct($config = null)
     {
-        $this->faker = Factory::create($locale);
+        $this->config = $config ?: Yaml::instance();
+
+        $this->setupFaker();
+    }
+
+    /**
+     * 设置 Faker
+     */
+    protected function setupFaker()
+    {
+        $fakerConfig = $this->config->get('faker');
+
+        $faker = Factory::create($fakerConfig['locale']);
+
+        if ($providers = array_get($fakerConfig, 'providers', [])) {
+            foreach ($providers as $providerClass) {
+                $this->addProvider(new $providerClass);
+            }
+        }
+
+        $this->faker = $faker;
     }
 
     /**
