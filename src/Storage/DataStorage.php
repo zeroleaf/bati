@@ -10,6 +10,7 @@
 namespace Zeroleaf\Bati\Storage;
 
 use Doctrine\Common\Cache\Cache;
+use GuzzleHttp\Cookie\SetCookie;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\ResponseInterface;
 use Zeroleaf\Bati\Config\Yaml;
@@ -39,8 +40,26 @@ trait DataStorage
     }
 
     /**
+     * @Given /^我将 Cookie 中的 (\S+) 存储为 (\S+)$/
+     *
+     * @param $cookieKey
+     * @param $targetKey
+     */
+    public function saveCookieAs($cookieKey, $targetKey)
+    {
+        /** @var SetCookie $cookie */
+        if (! $cookie = $this->getCookie($cookieKey)) {
+            Assert::fail("未找到 Cookie {$cookieKey}");
+
+            return;
+        }
+
+        $this->getCache()->save($targetKey, $cookie->getValue());
+    }
+
+    /**
      * @Given /^(?:则|那么)存储数据中的 (\S+) (?:等于|为) (\S+)$/
-     * 
+     *
      * @param string $key
      * @param mixed  $val
      */

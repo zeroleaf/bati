@@ -9,11 +9,13 @@
 
 namespace Zeroleaf\Bati;
 
+use GuzzleHttp\Cookie\SetCookie;
 use Behat\Behat\Context\Context;
-use Zeroleaf\Bati\Transform\Manager;
+use Zeroleaf\Bati\Assert\ResponseHeaderAssert;
+use Zeroleaf\Bati\Transform\Transformer;
 use Zeroleaf\Bati\Storage\DataStorage;
 use Psr\Http\Message\ResponseInterface;
-use Zeroleaf\Bati\Assert\ResponseAssert;
+use Zeroleaf\Bati\Assert\ResponseDataAssert;
 use Zeroleaf\Bati\Http\MakesHttpRequests;
 
 /**
@@ -26,7 +28,8 @@ class BatiContext implements Context
     use DataStorage;
 
     use MakesHttpRequests;
-    use ResponseAssert;
+    use ResponseDataAssert;
+    use ResponseHeaderAssert;
 
     /**
      * @var ResponseInterface
@@ -41,7 +44,7 @@ class BatiContext implements Context
     protected $jsonResponseData = [];
 
     /**
-     * @var Manager
+     * @var Transformer
      */
     protected $transformer;
 
@@ -54,11 +57,11 @@ class BatiContext implements Context
      */
     public function __construct()
     {
-        $this->transformer = new Manager();
+        $this->transformer = new Transformer();
     }
 
     /**
-     * @return Manager
+     * @return Transformer
      */
     public function getTransformer()
     {
@@ -74,5 +77,24 @@ class BatiContext implements Context
     public function getResponseValue($key, $default = null)
     {
         return array_get($this->jsonResponseData, $key, $default);
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return SetCookie|null
+     */
+    public function getCookie($key)
+    {
+        $cookies = $this->response->getHeader('Set-Cookie');
+
+        foreach ($cookies as $cookie) {
+            $setCookie = SetCookie::fromString($cookie);
+            if ($key == $setCookie->getName()) {
+                return $setCookie;
+            }
+        }
+
+        return null;
     }
 }

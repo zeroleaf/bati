@@ -20,5 +20,7 @@
     
     * 则响应的 Cookie cookie1 等于 cookie-value1
     
-    * 我将响应数据中的 data.id 存储为 data_id
-    * 则存储数据中的 data_id 等于 123
+    * 我将响应数据中的 data.id 存储为 dt_id
+    * 则存储数据中的 dt_id 等于 123
+    * 我将 Cookie 中的 cookie1 存储为 dt_cookie1
+    * 则存储数据中的 dt_cookie1 等于 cookie-value1

@@ -6,3 +6,10 @@ cache:
   # 缓存容器
   driver: array
 
+# 模拟数据
+faker:
+
+  locale: zh_CN
+  
+#  providers:
+#    - AppProvider
