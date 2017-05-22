@@ -68,6 +68,14 @@ class Yaml implements Repository
     }
 
     /**
+     * @return static
+     */
+    public static function instance()
+    {
+        return new static();
+    }
+
+    /**
      * @param string $key
      *
      * @return bool

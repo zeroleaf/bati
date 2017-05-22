@@ -65,7 +65,7 @@ trait ResponseAssert
      */
     public function assertJsonResponseDataEquals($key, $val)
     {
-        Assert::assertEquals($val, array_get($this->jsonResponseData, $key));
+        Assert::assertEquals($val, $this->getResponseValue($key));
     }
 
     /**
@@ -78,9 +78,7 @@ trait ResponseAssert
      */
     public function assertJsonResponseDataIs($key, $type)
     {
-        $val = array_get($this->jsonResponseData, $key);
-
-        $this->assertIsType($val, $type);
+        $this->assertIsType($this->getResponseValue($key), $type);
     }
 
     /**
@@ -133,6 +131,6 @@ trait ResponseAssert
      */
     public function assertJsonResponseDataRegexMatch($key, $pattern)
     {
-        Assert::assertRegExp($pattern, (string) array_get($this->jsonResponseData, $key));
+        Assert::assertRegExp($pattern, (string) $this->getResponseValue($key));
     }
 }

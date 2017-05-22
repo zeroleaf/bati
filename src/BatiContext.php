@@ -10,10 +10,11 @@
 namespace Zeroleaf\Bati;
 
 use Behat\Behat\Context\Context;
+use Zeroleaf\Bati\Transform\Manager;
+use Zeroleaf\Bati\Storage\DataStorage;
 use Psr\Http\Message\ResponseInterface;
 use Zeroleaf\Bati\Assert\ResponseAssert;
 use Zeroleaf\Bati\Http\MakesHttpRequests;
-use Zeroleaf\Bati\Transform\Manager;
 
 /**
  * Class BatiContext
@@ -22,6 +23,8 @@ use Zeroleaf\Bati\Transform\Manager;
  */
 class BatiContext implements Context
 {
+    use DataStorage;
+
     use MakesHttpRequests;
     use ResponseAssert;
 
@@ -60,5 +63,16 @@ class BatiContext implements Context
     public function getTransformer()
     {
         return $this->transformer;
+    }
+
+    /**
+     * @param string $key
+     * @param null   $default
+     *
+     * @return mixed
+     */
+    public function getResponseValue($key, $default = null)
+    {
+        return array_get($this->jsonResponseData, $key, $default);
     }
 }

@@ -19,3 +19,6 @@
     * 则响应数据中的 data.id 为 123
     
     * 则响应的 Cookie cookie1 等于 cookie-value1
+    
+    * 我将响应数据中的 data.id 存储为 data_id
+    * 则存储数据中的 data_id 等于 123
