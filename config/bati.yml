@@ -1,0 +1,8 @@
+# Bati 配置文件
+
+# 缓存, 用于数据中的存储
+cache: 
+  
+  # 缓存容器
+  driver: array
+

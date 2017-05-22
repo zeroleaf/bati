@@ -1,0 +1,28 @@
+{
+  "name": "zeroleaf/bati",
+  "license": "",
+  "authors": [
+    {
+      "name": "zeroleaf",
+      "email": "zeroleaf021@gmail.com"
+    }
+  ],
+  "require": {
+    "behat/behat": "^3.3",
+    "guzzlehttp/guzzle": "^6.2",
+    "fzaninotto/faker": "^1.6",
+    "illuminate/support": "^5.4",
+    "phpunit/phpunit": "^6.1",
+    "doctrine/cache": "^1.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zeroleaf\\Bati\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\Bati\\": "tests/"
+    }
+  }
+}
