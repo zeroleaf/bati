@@ -3,7 +3,7 @@
   
   背景:
   
-    * 在 http://inshop.com 域
+#    * 在 http://inshop.com 域
   
   场景: 基本测试
     * 对于 GET 的 /test/echo 请求

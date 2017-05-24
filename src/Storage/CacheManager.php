@@ -12,6 +12,7 @@ namespace Zeroleaf\Bati\Storage;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\ArrayCache;
 use Zeroleaf\Bati\Config\Repository;
+use Zeroleaf\Bati\Config\Yaml;
 
 /**
  * Class Manager
@@ -56,6 +57,16 @@ class CacheManager
         } catch (\Throwable $e) {
             throw new \InvalidArgumentException("未知的 Cache Driver: {$driver}");
         }
+    }
+
+    /**
+     * @param Repository|null $config
+     *
+     * @return static
+     */
+    public static function instance($config = null)
+    {
+        return new static($config ?: Yaml::instance());
     }
 
     /**

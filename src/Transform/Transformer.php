@@ -1,168 +1,103 @@
 <?php
 /**
  * Created by PhpStorm.
- * Date: 2017/5/19
- * Time: 00:26
+ * Date: 2017/5/23
+ * Time: 11:37
  *
  * @author limi
  */
 
 namespace Zeroleaf\Bati\Transform;
 
-use Faker\Factory;
-use Faker\Generator;
+use Zeroleaf\Bati\BatiContext;
 use Zeroleaf\Bati\Config\Repository;
-use Zeroleaf\Bati\Config\Yaml;
 
 /**
- * Class Manager
+ * Class Transformer
  *
  * @package Zeroleaf\Bati\Transform
  */
 class Transformer
 {
     /**
-     * @var Generator
+     * @var BatiContext
      */
-    protected $faker;
+    protected $context;
 
     /**
-     * @var Repository
+     * @var array
      */
-    protected $config;
+    protected $transformers;
 
     /**
      * Transformer constructor.
      *
-     * @param Repository $config
+     * @param BatiContext $context
      */
-    public function __construct($config = null)
+    public function __construct(BatiContext $context)
     {
-        $this->config = $config ?: Yaml::instance();
+        $this->context = $context;
 
-        $this->setupFaker();
+        $this->initializeTransformers();
     }
 
     /**
-     * 设置 Faker
+     *
      */
-    protected function setupFaker()
+    protected function initializeTransformers()
     {
-        $fakerConfig = $this->config->get('faker');
+        $this->transformers = [
+            new FakerTransformer($this->getConfig()),
+            new StorageTransformer($this->getCache()),
+        ];
+    }
 
-        $faker = Factory::create($fakerConfig['locale']);
-
-        if ($providers = array_get($fakerConfig, 'providers', [])) {
-            foreach ($providers as $providerClass) {
-                $this->addProvider(new $providerClass);
+    /**
+     * 转换.
+     *
+     * @param string $val
+     * @param bool   $failOnNotTransformable
+     *
+     * @return mixed
+     * @throws \InvalidArgumentException
+     */
+    public function transform($val, $failOnNotTransformable = false)
+    {
+        /** @var TransformerInterface $transformer */
+        foreach ($this->transformers as $transformer) {
+            if ($transformer->isTransformable($val)) {
+                return $transformer->transform($val);
             }
         }
 
-        $this->faker = $faker;
-    }
-
-    /**
-     * @return Generator
-     */
-    public function getFaker()
-    {
-        return $this->faker;
-    }
-
-    /**
-     * @param $provider
-     */
-    public function addProvider($provider)
-    {
-        $this->getFaker()->addProvider($provider);
-    }
-
-    /**
-     * @param string $val
-     *
-     * @return string
-     */
-    public function transform($val)
-    {
-        if (($fake = $this->getFake($val)) !== false) {
-            return $this->transformFake($fake);
+        if ($failOnNotTransformable) {
+            throw new \InvalidArgumentException("Not transformable value {$val}");
         }
 
         return $val;
     }
 
     /**
-     * @param string $val
-     *
-     * @return string|false
+     * @return BatiContext
      */
-    protected function getFake($val)
+    public function getContext()
     {
-        $pattern = '/^\{(.+)\}$/';
-
-        if (preg_match($pattern, $val, $matches)) {
-            return $matches[1];
-        }
-
-        return false;
+        return $this->context;
     }
 
     /**
-     * @param string $fake
-     *
-     * @return string
+     * @return Repository
      */
-    protected function transformFake($fake)
+    public function getConfig()
     {
-        if (preg_match("/\((.*)\)/", $fake, $matches)) {
-            $arguments = array_map([$this, 'formatArgument'], explode(',', $matches[1]));
-        }
-
-        $format = substr($fake, 0, strpos($fake, '(') ?: strlen($fake));
-
-        return $this->getFaker()->format($format, $arguments ?? []);
+        return $this->getContext()->getConfig();
     }
 
     /**
-     * @param string $val
-     *
-     * @return mixed
+     * @return \Doctrine\Common\Cache\Cache
      */
-    protected function formatArgument($val)
+    protected function getCache()
     {
-        $subject = trim($val, ", \t\n\r\0\x0B");
-
-        return $this->cast($subject);
-    }
-
-    /**
-     * @param string $val
-     *
-     * @return mixed
-     */
-    protected function cast($val)
-    {
-        if (preg_match("/^'(.*)'$/", $val, $matches)) {
-            return $matches[1];
-        }
-
-        if (is_numeric($val)) {
-            return strpos($val, '.') === false ? intval($val) : floatval($val);
-        }
-
-        if ($val === 'true') {
-            return true;
-        }
-
-        if ($val === 'false') {
-            return false;
-        }
-
-        if ($val === 'null') {
-            return null;
-        }
-
-        // TODO 添加数组的支持
-        return $val;
+        return $this->getContext()->getCache();
     }
 }

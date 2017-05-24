@@ -9,16 +9,11 @@
 
 namespace Zeroleaf\Bati\Storage;
 
+use PHPUnit\Framework\Assert;
 use Doctrine\Common\Cache\Cache;
 use GuzzleHttp\Cookie\SetCookie;
-use PHPUnit\Framework\Assert;
-use Psr\Http\Message\ResponseInterface;
-use Zeroleaf\Bati\Config\Yaml;
 
 /**
- * @property ResponseInterface $response
- * @property array             $jsonResponseData
- *
  * @package Zeroleaf\Bati\Cache
  */
 trait DataStorage
@@ -73,10 +68,10 @@ trait DataStorage
     /**
      * @return Cache
      */
-    protected function getCache()
+    public function getCache()
     {
         if (! isset($this->cache)) {
-            $this->cache = (new CacheManager(Yaml::instance()))->getCache();
+            $this->cache = (new CacheManager($this->getConfig()))->getCache();
         }
 
         return $this->cache;

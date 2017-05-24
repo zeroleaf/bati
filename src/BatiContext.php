@@ -12,11 +12,13 @@ namespace Zeroleaf\Bati;
 use GuzzleHttp\Cookie\SetCookie;
 use Behat\Behat\Context\Context;
 use Zeroleaf\Bati\Assert\ResponseHeaderAssert;
-use Zeroleaf\Bati\Transform\Transformer;
+use Zeroleaf\Bati\Config\Repository;
+use Zeroleaf\Bati\Config\Yaml;
 use Zeroleaf\Bati\Storage\DataStorage;
 use Psr\Http\Message\ResponseInterface;
 use Zeroleaf\Bati\Assert\ResponseDataAssert;
 use Zeroleaf\Bati\Http\MakesHttpRequests;
+use Zeroleaf\Bati\Transform\Transformer;
 
 /**
  * Class BatiContext
@@ -44,6 +46,11 @@ class BatiContext implements Context
     protected $jsonResponseData = [];
 
     /**
+     * @var Repository
+     */
+    protected $config;
+
+    /**
      * @var Transformer
      */
     protected $transformer;
@@ -57,7 +64,20 @@ class BatiContext implements Context
      */
     public function __construct()
     {
-        $this->transformer = new Transformer();
+        $this->config      = Yaml::instance();
+        $this->transformer = new Transformer($this);
+
+        if ($baseUri = $this->getConfig()->get('request.base_uri')) {
+            $this->setBaseUri($baseUri);
+        }
+    }
+
+    /**
+     * @return Repository
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 
     /**
@@ -66,6 +86,17 @@ class BatiContext implements Context
     public function getTransformer()
     {
         return $this->transformer;
+    }
+
+    /**
+     * @param string $val
+     * @param bool   $failOnNotTransformable
+     *
+     * @return mixed
+     */
+    public function transform($val, $failOnNotTransformable = false)
+    {
+        return $this->getTransformer()->transform($val, $failOnNotTransformable);
     }
 
     /**

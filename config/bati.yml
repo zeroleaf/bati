@@ -1,5 +1,9 @@
 # Bati 配置文件
 
+request:
+
+  base_uri: http://inshop.com 
+
 # 缓存, 用于数据中的存储
 cache: 
   

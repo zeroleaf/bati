@@ -10,7 +10,7 @@
 namespace Tests\Bati\Transform;
 
 use Tests\Bati\TestCase;
-use Zeroleaf\Bati\Transform\Transformer;
+use Zeroleaf\Bati\Transform\FakerTransformer;
 
 /**
  * Class ManagerTest
@@ -20,7 +20,7 @@ use Zeroleaf\Bati\Transform\Transformer;
 class ManagerTest extends TestCase
 {
     /**
-     * @var Transformer
+     * @var FakerTransformer
      */
     protected $manager;
 
@@ -31,7 +31,7 @@ class ManagerTest extends TestCase
     {
         parent::setUp();
 
-        $this->manager = new Transformer();
+        $this->manager = new FakerTransformer();
     }
 
     /**

@@ -9,8 +9,8 @@
 
 namespace Zeroleaf\Bati\Assert;
 
-use GuzzleHttp\Cookie\SetCookie;
 use PHPUnit\Framework\Assert;
+use GuzzleHttp\Cookie\SetCookie;
 use Psr\Http\Message\ResponseInterface;
 
 /**

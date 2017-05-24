@@ -63,8 +63,7 @@ trait MakesHttpRequests
      */
     public function setRequestData($key, $val)
     {
-        /** @noinspection PhpUndefinedMethodInspection */
-        $this->requestData[$key] = $this->getTransformer()->transform($val);
+        $this->requestData[$key] = $this->transform($val);
     }
 
     /**
