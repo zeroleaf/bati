@@ -11,6 +11,7 @@ namespace Zeroleaf\Bati;
 
 use GuzzleHttp\Cookie\SetCookie;
 use Behat\Behat\Context\Context;
+use Zeroleaf\Bati\Assert\CommonAssert;
 use Zeroleaf\Bati\Assert\ResponseHeaderAssert;
 use Zeroleaf\Bati\Config\Repository;
 use Zeroleaf\Bati\Config\Yaml;
@@ -30,6 +31,7 @@ class BatiContext implements Context
     use DataStorage;
 
     use MakesHttpRequests;
+    use CommonAssert;
     use ResponseDataAssert;
     use ResponseHeaderAssert;
 

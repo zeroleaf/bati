@@ -24,3 +24,6 @@
     * 则存储数据中的 dt_id 等于 123
     * 我将 Cookie 中的 cookie1 存储为 dt_cookie1
     * 则存储数据中的 dt_cookie1 等于 cookie-value1
+    * 则 $dt_cookie1 等于 cookie-value1
+    * 我将 18868823934 存储为 phoneNumber
+    * 则 $phoneNumber 为 18868823934

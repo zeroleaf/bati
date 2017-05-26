@@ -24,6 +24,17 @@ trait DataStorage
     protected $cache;
 
     /**
+     * @Given /^我将 (\S+) 存储为 (\S+)$/
+     *
+     * @param mixed  $val
+     * @param string $key
+     */
+    public function saveValueAs($val, $key)
+    {
+        $this->getCache()->save($key, $this->transform($val));
+    }
+
+    /**
      * @Given /^我将响应数据中的 (\S+) 存储为 (\S+)$/
      *
      * @param string $responseKey
